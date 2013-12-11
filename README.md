@@ -3,7 +3,7 @@
 - anagrams.rb
 
 	This was a ruby quiz solution. It turned out different than all the
-	other solutions in our group - a faster algorithm... 
+	other solutions in our group - a faster algorithm... (with tests)
 	
 - sub-new
 
@@ -15,7 +15,7 @@
 - life
 
 	Another ruby quiz solution ;-)  This is the standard life game, written
-	in ruby using curses for the screen manipulation.
+	in ruby using curses for the screen manipulation. (with extensive tests)
 	
 Please also feel free to visit my non-ruby (Wordpress) website at pactwi.biz
 This is a Wordpress site, but using the Foundation css framework I was
