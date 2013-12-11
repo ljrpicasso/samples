@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Usage:   <%= @usage %>
+# Summary: <%= @summary %>
+# Help:    <%= parse_long_text(@help) %>
+
+set -e
+
+# Provide sub completions
+if [ "$1" = "--complete" ]; then
+  echo none
+  exit 0
+fi
+
+# include shared lib functions
+path=$0
+SCRIPT_ROOT="${path%/*}"
+source $SCRIPT_ROOT/shared-lib
+
+# HERE IS WHERE YOUR SCRIPT GOES ;-)
+
+echo "Your script is ready for editing. Please"
+echo "proceed to this file: "
+echo "--> <%= @new_command_file %>"

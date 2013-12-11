@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+# Usage: Usage: sub new [options] <new_command_name>
+# Summary:  Generate a template for a new sub command
+# Help: The 'new' command will generate a new template for a sub task.
+# The default generation is in bash. Use --ruby for generating a ruby
+# command. For full help, use 'sub new -h'
+
+require 'optparse'
+require 'erb'
+require 'fileutils'
+require 'date'
+
+share_dir = ENV['_SUB_ROOT'] + "/share"
+require_relative "#{share_dir}/sub/ruby_console"
+require_relative "#{share_dir}/sub/generate"
+
+# Provide sub completions
+if ARGV[0] == "--complete"
+  exit
+end
+
+# Command line options for OptionParser.
+options = {}
+
+optparse = OptionParser.new do |opts|
+  opts.banner = "Usage: sub new [options] <new_command_name>"
+
+  # Define the options, and what they do
+  options[:verbose] = false
+  opts.on( '-v', '--verbose', 'Output more information' ) do
+    options[:verbose] = true
+  end
+
+  options[:bash] = true
+  opts.on( '-b', '--bash', 'Generate the template in bash [default]' ) do
+    options[:bash] = true
+    options[:ruby] = false
+  end
+
+  options[:ruby] = false
+  opts.on( '-r', '--ruby', 'Generate the template in Ruby' ) do
+    options[:ruby] = true
+    options[:bash] = false
+  end
+
+  # This displays the help screen, all programs are
+  # assumed to have this option.
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+# Parse the command-line.
+begin optparse.parse! ARGV
+rescue OptionParser::InvalidOption => e
+  invalid = e.to_s.split(": ").last
+  puts "Invalid option: #{invalid}"
+  retry
+end
+
+puts "! Being verbose" if options[:verbose]
+puts "! Generating bash" if options[:bash] && options[:verbose]
+puts "! Generating ruby" if options[:ruby] && options[:verbose]
+
+new_command_name = ''
+if ARGV.count == 0
+  new_command_name = get_string("Name of your new command: ")
+  generate_command(new_command_name, options) if !new_command_name.empty?
+else
+  ARGV.each do |f|
+    generate_command(f.to_s, options)
+  end
+end
+

@@ -1,0 +1,101 @@
+#!/usr/bin/env ruby
+
+require_relative 'life'
+require 'curses'
+
+def show_help
+  puts "Usage: run_life [p|a|s] [d]"
+  puts "where"
+  puts "   p uses pulsar shape, center dot"
+  puts "   a uses alternate pulsar shape, no center dot"
+  puts "   s uses spaceship shape"
+  puts "   d is the number of iterations to display"
+  exit
+end
+
+def clear_shapes(world)
+  world.cells = []
+end
+
+def add_shape(world, shape)
+  clear_shapes world
+  y = 3
+  base_x = 0
+  shape.each do |s|
+    base_x = (20 - s.length)/2 if base_x == 0
+    0.upto(s.length-1) do |i|
+      if s[i] == '*'
+        Cell.new(world, base_x+i, y)
+      end
+    end
+    y += 1
+  end
+end
+
+@w = World.new
+
+pulsar_text = [
+  "  ***   ***  ",
+  "             ",
+  "*    * *    *",
+  "*    * *    *",
+  "*    * *    *",
+  "  ***   ***  ",
+  "      *      ",
+  "  ***   ***  ",
+  "*    * *    *",
+  "*    * *    *",
+  "*    * *    *",
+  "             ",
+  "  ***   ***  ",
+]
+
+# pulsar2 is the same, but without the center dot
+pulsar2_text = pulsar_text.dup
+pulsar2_text[6] = pulsar2_text[1]
+
+lwss_text = [
+  "         ",
+  " *  *    ",
+  "     *   ",
+  " *   *   ",
+  "  ****   ",
+  "         ",
+  "         ",
+  "   *  *  ",
+  "       * ",
+  "   *   * ",
+  "    **** ",
+]
+
+add_shape(@w, pulsar_text)
+
+loops = 30
+shape = 'p'
+
+ARGV.each do |a|
+  if a[0]=='p'
+    add_shape(@w, pulsar_text)
+  elsif a[0]=='a'
+    add_shape(@w, pulsar2_text)
+  elsif a[0]=='s'
+    add_shape(@w, lwss_text)
+  elsif a[0]=='?'
+    show_help
+  else
+    loops = a.to_i
+  end
+end
+
+Curses.init_screen
+@w.display
+Curses.refresh
+sleep 1
+1.upto(loops) do
+  @w.tick!
+  @w.display
+  Curses.refresh
+  sleep 0.5
+end
+Curses.close_screen
+

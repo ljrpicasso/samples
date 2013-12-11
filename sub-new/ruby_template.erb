@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# Usage:   <%= @usage %>
+# Summary: <%= @summary %>
+# Help:    <%= parse_long_text(@help) %>
+
+REV = "Generated <%= DateTime.now %>"
+# NOTE: Please leave the above line for the moment. Sub will
+# stop there for the help command. Otherwise, it continues until
+# it finds a non-comment line.
+
+# Provide esp completions
+if ARGV[0] == "--complete"
+  # puts "none"
+  exit
+end
+
+# HERE IS WHERE YOUR SCRIPT GOES ;-)
+
+puts "Your script is ready for editing. Please"
+puts "proceed to this file: "
+puts "--> <%= @new_command_file %>"
